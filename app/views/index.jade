@@ -7,48 +7,62 @@ html( lang="en" )
         meta( name='viewport', content='width=device-width, initial-scale=1.0' )
         meta( name='description', content='Baking Bootstrap Snippets with Jade' )
         //- Bootswatch Theme
-        link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/slate/bootstrap.min.css", rel="stylesheet")
+        link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css", rel="stylesheet")
     body(style="padding-bottom:10rem;").container
         script( src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' )
         script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
+        link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css")
+        link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js")
+        link(rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css")
+        script(src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js")
+        script(src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js")
+        style(type='text/css').
+            #dobForm .form-control-feedback {
+                top: 0;
+                right: -15px;
+            }
 
-
-        div.row
-            div.col-md-12.col-sm-12.col-xs-12
+        .row
+            .col-md-12.col-sm-12.col-xs-12
                 h3 Enter your date of birth
-            div.col-md-6.col-sm-6.col-xs-12
+            .col-md-6.col-sm-6.col-xs-12
                 form#dobForm.form-horizontal(action='api/bears' method='POST')
-                    div.form-group
+                    .form-group
                         label.col-sm-4.control-label(for='name') Name:
-                        div.col-sm-8
-                            input.form-control#name( type="text",name='name' )
-                    div.form-group
-                        label.col-sm-4.control-label(for='datepicker') Date of Birth:
-                        div.col-sm-8
-                            input.form-control( type="text",name='date_of_birth',placeholder='dd/mm/yyyy' )
-                    div.form-group
-                        div.col-sm-offset-4.col-sm-8
+                        .col-sm-8
+                            input#name.form-control( type="text",name='name' )
+                    .form-group
+                        label.col-sm-4.control-label(for='dob') Date of Birth:
+                        .col-sm-8.date
+                            #datePicker.input-group.input-append.date
+                                input#dob.form-control( type="text",name='date_of_birth' )
+                                span.input-group-addon.add-on
+                                    span.glyphicon.glyphicon-calendar
+                    .form-group
+                        .col-sm-offset-4.col-sm-8
                             button#calculate.btn.btn-default(type="button") Calculate
-            div.col-md-6.col-sm-6.col-xs-12
+            .col-md-6.col-sm-6.col-xs-12
                 .panel.panel-default
                     .panel-heading Days lived
                     .panel-body
                         h3
                             span#dayslived 12312
-            div.col-md-12.col-sm-12.col-xs-12
+            .col-md-12.col-sm-12.col-xs-12
                 .panel.panel-default
                     .panel-heading History
                     .panel-body
                         table#history.table
                             thead
                                 tr
-                                    th id
+                                    th(style='width:4em;')
                                     th Name
                                     th Date of birth
                                     th Days lived
-                            tbody
-                                tr
-                                    td asd
+                            tbody#rows
+                                tr.prototype( style="display:none;")
+                                    td
+                                        button#calculate.btn.btn-xs.btn-danger(type="submit") Remove
                                     td asdf
                                     td asfASDFG
                                     td dsf
@@ -56,27 +70,87 @@ html( lang="en" )
 
 
     script.
-        $(document).ready(function () {
-            populateHistory();
-        });
         $("#calculate").click(function () {
-            $.post("/api/bears",$("#dobForm").serialize() ,function(data,status){
-                $('#dayslived').html(data.name);
-            });
-            populateHistory();
+            $('#dobForm').formValidation('validate');
+            var formValidation = $('#dobForm').data('formValidation');
+            var valid = formValidation.isValid();
+            if(valid){
+
+
+                //saving the entry
+                //$.post("/api/bears",$("#dobForm").serialize() ,function(data,status){
+                var result = generateDays($('#dob').val())
+                $('#dayslived').html(result);
+                //});
+
+                populateHistory();
+            }
         });
 
         function populateHistory(){
             $.get("/api/bears", function (data, status) {
-                $('#history').find('tbody tr').remove();
+                $('#history').find('tbody tr.entries').remove();
                 $(data).each(function(index,element){
-                    console.log(element);
-                    var entry = $(  "<tr><td>"+element._id+
-                                    "</td><td>"+element.name+
-                                    "</td><td>"+element.date_of_birth+
-                                    "</td><td>"+element.days +
-                                    "</td></tr>");
-                    $('#history tbody').append(entry);
+                    var entry = $('#rows .prototype').clone().attr("class","entries");
+                    entry.removeAttr("style");
+                    entry.find('td').eq(1).html(element.name);
+                    entry.find('td').eq(2).html(element.date_of_birth);
+                    entry.find('td').eq(3).html(generateDays(element.date_of_birth));
+                    $('#history').find('tbody#rows').append(entry);
                 });
             });
         };
+
+        function generateDays(dateString) {
+            var now = new Date();
+            var todayAtMidn = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            var dt = new Date(dateString);
+            var result = todayAtMidn.getTime() - dt.getTime();
+            var output = (((result / 1000 ) / 60) / 60) / 24;
+            output = Math.round(output);
+            return output;
+        }
+
+        $(document).ready(function () {
+            populateHistory();
+            $('#dob')
+                    .datepicker({
+                        format: 'mm/dd/yyyy'
+                    })
+                    .on('changeDate', function (e) {
+                        // Revalidate the date field
+                        $('#dobForm').formValidation('revalidateField', 'date_of_birth');
+                    });
+            $('#dobForm').formValidation({
+                framework: 'bootstrap',
+                button: {
+                    selector: '#calculate',
+                    disabled: 'disabled'
+                },
+                icon: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    name: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The name is required'
+                            }
+                        }
+                    },
+                    date_of_birth: {
+                        validators: {
+                            notEmpty: {
+                                message: 'The date is required'
+                            },
+                            date_of_birth: {
+                                format: 'MM/DD/YYYY',
+                                message: 'The date is not a valid'
+                            }
+                        }
+                    }
+                }
+            });
+        });

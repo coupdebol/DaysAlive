@@ -5,8 +5,7 @@ var Schema       = mongoose.Schema;
 
 var BearSchema   = new Schema({
     name: String ,
-    date_of_birth: String,
-    days: String
+    date_of_birth: String
 });
 
 module.exports = mongoose.model('Bear', BearSchema);

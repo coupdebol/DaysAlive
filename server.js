@@ -59,7 +59,6 @@ router.route('/bears')
         var bear = new Bear();      // create a new instance of the Bear model
         bear.name = req.body.name;  // set the bears name (comes from the request)
         bear.date_of_birth = req.body.date_of_birth;
-        bear.days = days;
 
 
         // save the bear and check for errors
@@ -137,13 +136,3 @@ router.route('/bears/:bear_id')
 app.listen(port);
 console.log('Magic happens on port ' + port);
 
-function generateDays(dateString)
-{
-    var now = new Date();
-    var todayAtMidn = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var dt = new Date(dateString);
-    var result = todayAtMidn.getMilliseconds() - dt.getMilliseconds();
-    var output = (((result / 1000 )/60)/60)/24;
-    console.log(output);
-    return output;
-}
