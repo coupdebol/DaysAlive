@@ -9,7 +9,8 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var Bear       = require('./app/models/bear');
 var mongoose   = require('mongoose');
-var path        = require('path');
+var path       = require('path');
+var fs         = require('fs');
 mongoose.connect('mongodb://127.0.0.1:27017');
 
 // configure app to use bodyParser()
@@ -26,31 +27,21 @@ var jade = require('jade');
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
-var views = express.Router();
 
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
-app.use('/',views);
+app.use('/', router);
+app.use(express.static('node_modules'));
 
 
-
-views.get('/', function(req, res) {
-    var html = jade.renderFile('app/views/index.jade', []);
-    res.send(html);
-});
-
-
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.send(jade.renderFile('app/views/index.jade', {pretty:true}));
 });
+
 
 // more routes for our API will happen here
 // on routes that end in /bears
 // ----------------------------------------------------
-router.route('/bears')
-
+router.route('/api/bears')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
 
@@ -80,8 +71,7 @@ router.route('/bears')
 
 // on routes that end in /bears/:bear_id
 // ----------------------------------------------------
-router.route('/bears/:bear_id')
-
+router.route('/api/bears/:bear_id')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
         Bear.findById(req.params.bear_id, function(err, bear) {
