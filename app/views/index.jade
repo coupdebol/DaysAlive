@@ -62,7 +62,7 @@ html( lang="en" )
                             tbody#rows
                                 tr.prototype( style="display:none;")
                                     td
-                                        button#calculate.btn.btn-xs.btn-danger(type="submit") Remove
+                                        button#calculate.btn.btn-xs.btn-danger(type="button") Remove
                                         p.id(style="display:none")
                                     td asdf
                                     td asfASDFG
@@ -80,7 +80,10 @@ html( lang="en" )
                 $('#dayslived').html(result);
                 //saving the entry
                 $.post("/api/bears",$("#dobForm").serialize() ,function(data,status){
-
+                    if(status == "success") {
+                        formValidation.resetField('name', true);
+                        formValidation.resetField('date_of_birth', true);
+                    }
                 });
 
                 populateHistory();
