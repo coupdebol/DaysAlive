@@ -54,8 +54,6 @@ router.route('/bears')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
 
-        var days = generateDays(req.body.date_of_birth);
-
         var bear = new Bear();      // create a new instance of the Bear model
         bear.name = req.body.name;  // set the bears name (comes from the request)
         bear.date_of_birth = req.body.date_of_birth;

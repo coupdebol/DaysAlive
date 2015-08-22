@@ -63,6 +63,7 @@ html( lang="en" )
                                 tr.prototype( style="display:none;")
                                     td
                                         button#calculate.btn.btn-xs.btn-danger(type="submit") Remove
+                                        p.id(style="display:none")
                                     td asdf
                                     td asfASDFG
                                     td dsf
@@ -75,13 +76,12 @@ html( lang="en" )
             var formValidation = $('#dobForm').data('formValidation');
             var valid = formValidation.isValid();
             if(valid){
-
-
-                //saving the entry
-                //$.post("/api/bears",$("#dobForm").serialize() ,function(data,status){
                 var result = generateDays($('#dob').val())
                 $('#dayslived').html(result);
-                //});
+                //saving the entry
+                $.post("/api/bears",$("#dobForm").serialize() ,function(data,status){
+
+                });
 
                 populateHistory();
             }
@@ -93,13 +93,28 @@ html( lang="en" )
                 $(data).each(function(index,element){
                     var entry = $('#rows .prototype').clone().attr("class","entries");
                     entry.removeAttr("style");
+                    entry.find('p.id').html(element._id);
                     entry.find('td').eq(1).html(element.name);
                     entry.find('td').eq(2).html(element.date_of_birth);
                     entry.find('td').eq(3).html(generateDays(element.date_of_birth));
+                    initRemoveBtn(entry);
                     $('#history').find('tbody#rows').append(entry);
                 });
             });
         };
+
+        function initRemoveBtn(entry) {
+            entry.find('button').on('click',function(){
+                var id = entry.find('p.id').html();
+                $.ajax({
+                    url: '/api/bears/'+id,
+                    type: 'DELETE',
+                    success: function (result) {
+                        populateHistory();
+                    }
+                });
+            });
+        }
 
         function generateDays(dateString) {
             var now = new Date();
