@@ -11,7 +11,19 @@ var Bear       = require('./app/models/bear');
 var mongoose   = require('mongoose');
 var path       = require('path');
 var fs         = require('fs');
+var pg = require('pg'); //PostgreSQL
 mongoose.connect('mongodb://127.0.0.1:27017');
+
+pg.connect(process.env.DATABASE_URL, function(err, client) {
+    if (err) throw err;
+    console.log('Connected to postgres! Getting schemas...');
+
+    client
+        .query('SELECT table_schema,table_name FROM information_schema.tables;')
+        .on('row', function(row) {
+            console.log(JSON.stringify(row));
+        });
+});
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -34,6 +46,7 @@ app.use(express.static('node_modules'));
 
 
 router.get('/', function(req, res) {
+    console.log("sending index to client!");
     res.send(jade.renderFile('app/views/index.jade', {pretty:true}));
 });
 
@@ -45,6 +58,7 @@ router.route('/api/bears')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
 
+        console.log("creating a new entry..");
         var bear = new Bear();      // create a new instance of the Bear model
         bear.name = req.body.name;  // set the bears name (comes from the request)
         bear.date_of_birth = req.body.date_of_birth;
@@ -61,6 +75,7 @@ router.route('/api/bears')
     })
     // get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
+        console.log("gathering all entries..");
         Bear.find(function (err, bears) {
             if (err)
                 res.send(err);
@@ -74,6 +89,7 @@ router.route('/api/bears')
 router.route('/api/bears/:bear_id')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
+        console.log("../api/bears/:bear_id'");
         Bear.findById(req.params.bear_id, function(err, bear) {
             if (err)
                 res.send(err);
@@ -122,5 +138,7 @@ router.route('/api/bears/:bear_id')
 // START THE SERVER
 // =============================================================================
 app.listen(port);
+console.log('====================================================');
 console.log('Magic happens on port ' + port);
+console.log('====================================================');
 
