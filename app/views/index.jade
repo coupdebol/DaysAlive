@@ -136,9 +136,10 @@ html( lang="en" )
 
         $(document).ready(function () {
             populateHistory();
-            $('#dob')
+            $('.datepicker')
                     .datepicker({
-                        format: 'mm/dd/yyyy'
+                        format: 'mm/dd/yyyy',
+                        weekStart: 1
                     })
                     .on('changeDate', function (e) {
                         // Revalidate the date field
