@@ -1,3 +1,1 @@
-server: node server.js
-dbinit: node database.js
-
+web: node server.js
