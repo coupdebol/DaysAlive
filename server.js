@@ -1,5 +1,7 @@
 // server.js
 console.log("Starting server");
+console.log("DB URL:" + process.env.DATABASE_URL);
+
 // BASE SETUP
 // =============================================================================
 
@@ -7,12 +9,12 @@ console.log("Starting server");
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var Bear       = require('./app/models/bear');
-var mongoose   = require('mongoose');
+//var Bear       = require('./app/models/bear');
+//var mongoose   = require('mongoose');
 var path       = require('path');
 var fs         = require('fs');
 var pg = require('pg'); //PostgreSQL
-mongoose.connect('mongodb://127.0.0.1:27017');
+//mongoose.connect('mongodb://127.0.0.1:27017');
 
 pg.connect(process.env.DATABASE_URL, function(err, client) {
     if (err) throw err;
@@ -59,29 +61,29 @@ router.route('/api/bears')
     .post(function(req, res) {
 
         console.log("creating a new entry..");
-        var bear = new Bear();      // create a new instance of the Bear model
-        bear.name = req.body.name;  // set the bears name (comes from the request)
-        bear.date_of_birth = req.body.date_of_birth;
-
-
-        // save the bear and check for errors
-        bear.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Bear created!' });
-        });
+        //var bear = new Bear();      // create a new instance of the Bear model
+        //bear.name = req.body.name;  // set the bears name (comes from the request)
+        //bear.date_of_birth = req.body.date_of_birth;
+        //
+        //
+        //// save the bear and check for errors
+        //bear.save(function(err) {
+        //    if (err)
+        //        res.send(err);
+        //
+        //    res.json({ message: 'Bear created!' });
+        //});
 
     })
     // get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
         console.log("gathering all entries..");
-        Bear.find(function (err, bears) {
-            if (err)
-                res.send(err);
-
-            res.json(bears);
-        });
+        //Bear.find(function (err, bears) {
+        //    if (err)
+        //        res.send(err);
+        //
+        //    res.json(bears);
+        //});
     });
 
 // on routes that end in /bears/:bear_id
@@ -90,46 +92,46 @@ router.route('/api/bears/:bear_id')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
         console.log("../api/bears/:bear_id'");
-        Bear.findById(req.params.bear_id, function(err, bear) {
-            if (err)
-                res.send(err);
-            res.json(bear);
-        });
+        //Bear.findById(req.params.bear_id, function(err, bear) {
+        //    if (err)
+        //        res.send(err);
+        //    res.json(bear);
+        //});
     })
     // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
     .put(function(req, res) {
 
         // use our bear model to find the bear we want
-        Bear.findById(req.params.bear_id, function(err, bear) {
-
-            if (err)
-                res.send(err);
-
-            var days = generateDays(req.body.date_of_birth);
-
-            bear.name = req.body.name;  // update the bears info
-            bear.date_of_birth = req.body.date_of_birth;
-            bear.days = days;
-            // save the bear
-            bear.save(function(err) {
-                if (err)
-                    res.send(err);
-
-                res.json({ days: 'Bear updated!' });
-            });
-
-        });
+        //Bear.findById(req.params.bear_id, function(err, bear) {
+        //
+        //    if (err)
+        //        res.send(err);
+        //
+        //    var days = generateDays(req.body.date_of_birth);
+        //
+        //    bear.name = req.body.name;  // update the bears info
+        //    bear.date_of_birth = req.body.date_of_birth;
+        //    bear.days = days;
+        //    // save the bear
+        //    bear.save(function(err) {
+        //        if (err)
+        //            res.send(err);
+        //
+        //        res.json({ days: 'Bear updated!' });
+        //    });
+        //
+        //});
     })
     // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
     .delete(function(req, res) {
-        Bear.remove({
-            _id: req.params.bear_id
-        }, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Successfully deleted' });
-        });
+        //Bear.remove({
+        //    _id: req.params.bear_id
+        //}, function(err, bear) {
+        //    if (err)
+        //        res.send(err);
+        //
+        //    res.json({ message: 'Successfully deleted' });
+        //});
     });
 
 

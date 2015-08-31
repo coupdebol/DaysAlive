@@ -1,11 +1,11 @@
 // app/models/bear.js
 
-var mongoose     = require('mongoose');
-var Schema       = mongoose.Schema;
+//var mongoose     = require('mongoose');
+//var Schema       = mongoose.Schema;
 
-var BearSchema   = new Schema({
-    name: String ,
-    date_of_birth: String
-});
+//var BearSchema   = new Schema({
+//    name: String ,
+//    date_of_birth: String
+//});
 
-module.exports = mongoose.model('Bear', BearSchema);
+//module.exports = mongoose.model('Bear', BearSchema);
