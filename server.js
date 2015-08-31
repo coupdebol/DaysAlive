@@ -32,8 +32,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// var port = process.env.PORT || 8080;        // set our port
-var port = 80;
+var port = process.env.PORT || 8080;        // set our port
 
 var jade = require('jade');
 
