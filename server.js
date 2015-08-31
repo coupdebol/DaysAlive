@@ -9,23 +9,22 @@ console.log("DB URL:" + process.env.DATABASE_URL);
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-//var Bear       = require('./app/models/bear');
-//var mongoose   = require('mongoose');
-var path       = require('path');
 var fs         = require('fs');
+var path       = require('path');
 var pg = require('pg'); //PostgreSQL
-//mongoose.connect('mongodb://127.0.0.1:27017');
 
-pg.connect(process.env.DATABASE_URL, function(err, client) {
-    if (err) throw err;
-    console.log('Connected to postgres! Getting schemas...');
+var connectionString = process.env.DATABASE_URL;
 
-    client
-        .query('SELECT table_schema,table_name FROM information_schema.tables;')
-        .on('row', function(row) {
-            console.log(JSON.stringify(row));
-        });
-});
+//pg.connect(process.env.DATABASE_URL, function(err, client) {
+//    if (err) throw err;
+//    console.log('Connected to postgres! Getting schemas...');
+//
+//    client
+//        .query('SELECT table_schema,table_name FROM information_schema.tables;')
+//        .on('row', function(row) {
+//            console.log(JSON.stringify(row));
+//        });
+//});
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
