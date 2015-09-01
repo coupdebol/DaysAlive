@@ -1,2 +1,1 @@
-web: node server.js
-db-init: node database.js
+web: npm start

@@ -13,7 +13,7 @@ pg.connect(connectionString, function(err, client) {
     if (err) throw err;
 
     client
-        .query('CREATE TABLE name-dob(ID int NOT NULL AUTO_INCREMENT, name VARCHAR(40) not null, dob DATE)')
+        .query('CREATE TABLE namedob(ID int NOT NULL SERIAL, name VARCHAR(40) not null, dob DATE)')
         .on('end', function(row) {
             console.log(JSON.stringify(row));
         })
