@@ -48,15 +48,42 @@ router.get('/', function(req, res) {
 router.route('/api/bears')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
-        console.log("creating a new entry..");
-        var query = 'INSERT INTO namedob(id,name,dob) VALUES (2,"'+req.body.name+'","'+req.body.date_of_birth+'");';
-        runQuery(query);
+        var queryString = 'INSERT INTO namedob(name,date_of_birth) VALUES (\''+req.body.name+'\',\''+req.body.date_of_birth+'\');';
+        pg.connect(connectionString,function(err,client,done){
+            console.log("Connecting..");
+            if(err) {
+                return console.error('could not connect to postgres', err);
+            }
+            var query = client.query(queryString, function(err,result){
+                console.log("Sending query.."+queryString);
+                if(err) {
+                    return console.error('error running query', err);
+                }
+                done();
+            });
+        });
     })
     // get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
-        console.log("gathering all entries..");
-        var query = "SELECT * FROM namedob;";
-        runQuery(query,res);
+        var queryString = "SELECT * FROM namedob;";
+
+        pg.connect(connectionString,function(err,client,done){
+            console.log("Connecting..");
+            if(err) {
+                return console.error('could not connect to postgres', err);
+            }
+            var query = client.query(queryString, function(err,result){
+                console.log("Sending query..");
+                if(err) {
+                    return console.error('error running query', err);
+                }
+                done();
+            });
+            query.on('end', function(result){
+                res.send(result.rows);
+            });
+
+        });
     });
 
 // on routes that end in /bears/:bear_id
@@ -106,26 +133,6 @@ router.route('/api/bears/:bear_id')
         //    res.json({ message: 'Successfully deleted' });
         //});
     });
-
-function runQuery(queryString, res){
-    console.log(queryString);
-    pg.connect(connectionString,function(err,client,done){
-        if(err) {
-            return console.error('could not connect to postgres', err);
-        }
-        var query = client.query(queryString, function(err, result){
-            done();
-            if(err) {
-                return console.error('error running query', err);
-            }
-        });
-        query.on('row', function(row,result) {
-            result.addRow(row);
-            console.log(result.rows);
-            res.send(result.rows);
-        });
-    });
-}
 
 
 // START THE SERVER
