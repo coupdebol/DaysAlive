@@ -14,17 +14,7 @@ var path       = require('path');
 var pg = require('pg'); //PostgreSQL
 
 var connectionString = process.env.DATABASE_URL;
-
-//pg.connect(process.env.DATABASE_URL, function(err, client) {
-//    if (err) throw err;
-//    console.log('Connected to postgres! Getting schemas...');
-//
-//    client
-//        .query('SELECT table_schema,table_name FROM information_schema.tables;')
-//        .on('row', function(row) {
-//            console.log(JSON.stringify(row));
-//        });
-//});
+var client = new pg.Client(connectionString);
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -58,31 +48,15 @@ router.get('/', function(req, res) {
 router.route('/api/bears')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
-
         console.log("creating a new entry..");
-        //var bear = new Bear();      // create a new instance of the Bear model
-        //bear.name = req.body.name;  // set the bears name (comes from the request)
-        //bear.date_of_birth = req.body.date_of_birth;
-        //
-        //
-        //// save the bear and check for errors
-        //bear.save(function(err) {
-        //    if (err)
-        //        res.send(err);
-        //
-        //    res.json({ message: 'Bear created!' });
-        //});
-
+        var query = 'INSERT INTO namedob(id,name,dob) VALUES (2,"'+req.body.name+'","'+req.body.date_of_birth+'");';
+        runQuery(query);
     })
     // get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
         console.log("gathering all entries..");
-        //Bear.find(function (err, bears) {
-        //    if (err)
-        //        res.send(err);
-        //
-        //    res.json(bears);
-        //});
+        var query = "SELECT * FROM namedob;";
+        runQuery(query,res);
     });
 
 // on routes that end in /bears/:bear_id
@@ -133,7 +107,25 @@ router.route('/api/bears/:bear_id')
         //});
     });
 
-
+function runQuery(queryString, res){
+    console.log(queryString);
+    pg.connect(connectionString,function(err,client,done){
+        if(err) {
+            return console.error('could not connect to postgres', err);
+        }
+        var query = client.query(queryString, function(err, result){
+            done();
+            if(err) {
+                return console.error('error running query', err);
+            }
+        });
+        query.on('row', function(row,result) {
+            result.addRow(row);
+            console.log(result.rows);
+            res.send(result.rows);
+        });
+    });
+}
 
 
 // START THE SERVER
