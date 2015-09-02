@@ -13,8 +13,6 @@ if(process.env.DATABASE_URL === undefined)
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var fs         = require('fs');
-var path       = require('path');
 var pg = require('pg'); //PostgreSQL
 
 var connectionString = process.env.DATABASE_URL;
@@ -41,7 +39,6 @@ app.use(express.static('node_modules'));
 
 
 router.get('/', function(req, res) {
-    console.log("sending index to client!");
     res.send(jade.renderFile('app/views/index.jade', {pretty:true}));
 });
 
@@ -49,7 +46,7 @@ router.get('/', function(req, res) {
 // more routes for our API will happen here
 // on routes that end in /bears
 // ----------------------------------------------------
-router.route('/api/bears')
+router.route('/api/entry')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
         var queryString = 'INSERT INTO namedob(name,date_of_birth) VALUES (\''+req.body.name+'\',\''+req.body.date_of_birth+'\');';
@@ -71,65 +68,50 @@ router.route('/api/bears')
     .get(function(req, res) {
         var queryString = "SELECT * FROM namedob;";
 
-        pg.connect(connectionString,function(err,client,done){
+        var client = new pg.Client(connectionString);
+        client.connect(function(err){
             console.log("Connecting..");
             if(err) {
-                return console.error('could not connect to postgres', err);
+                return console.error('could not connect to DataBase', err);
             }
-            var query = client.query(queryString, function(err,result){
-                console.log("Sending query..");
-                if(err) {
-                    return console.error('error running query', err);
-                }
-                done();
-            });
-            query.on('end', function(result){
-                res.send(result.rows);
-            });
-
         });
+        var query = client.query(queryString,function(err){
+            console.log("Sending query..");
+            if(err) {
+                return console.error('error running query', err);
+            }
+        });
+        query.on('end', function(result) {
+            res.send(result.rows);
+            client.end();
+        });
+        //pg.connect(connectionString,function(err,client,done){
+        //    console.log("Connecting..");
+        //    if(err) {
+        //        return console.error('could not connect to postgres', err);
+        //    }
+        //    var query = client.query(queryString, function(err,result){
+        //        console.log("Sending query..");
+        //        if(err) {
+        //            return console.error('error running query', err);
+        //        }
+        //        done();
+        //    });
+        //    query.on('end', function(result){
+        //        res.send(result.rows);
+        //    });
+        //
+        //});
     });
 
 // on routes that end in /bears/:bear_id
 // ----------------------------------------------------
-router.route('/api/bears/:bear_id')
-    // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
-    .get(function(req, res) {
-        console.log("../api/bears/:bear_id'");
-        //Bear.findById(req.params.bear_id, function(err, bear) {
-        //    if (err)
-        //        res.send(err);
-        //    res.json(bear);
-        //});
-    })
-    // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
-    .put(function(req, res) {
+router.route('/api/entry/:entry_id')
 
-        // use our bear model to find the bear we want
-        //Bear.findById(req.params.bear_id, function(err, bear) {
-        //
-        //    if (err)
-        //        res.send(err);
-        //
-        //    var days = generateDays(req.body.date_of_birth);
-        //
-        //    bear.name = req.body.name;  // update the bears info
-        //    bear.date_of_birth = req.body.date_of_birth;
-        //    bear.days = days;
-        //    // save the bear
-        //    bear.save(function(err) {
-        //        if (err)
-        //            res.send(err);
-        //
-        //        res.json({ days: 'Bear updated!' });
-        //    });
-        //
-        //});
-    })
     // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
     .delete(function(req, res) {
         //Bear.remove({
-        //    _id: req.params.bear_id
+        //    _id: req.params.entry_id
         //}, function(err, bear) {
         //    if (err)
         //        res.send(err);

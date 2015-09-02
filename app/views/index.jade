@@ -5,7 +5,7 @@ html( lang="en" )
         meta( charset='utf-8' )
         meta( http-equiv='X-UA-Compatible', content='IE=edge' )
         meta( name='viewport', content='width=device-width, initial-scale=1.0' )
-        meta( name='description', content='Baking Bootstrap Snippets with Jade' )
+        meta( name='description', content='How many days have you lived?' )
 
 
     body(style="padding-bottom:10rem;").container
@@ -77,11 +77,13 @@ html( lang="en" )
 
 
     script.
-        $("#calculate").click(function () {
-            $('#dobForm').formValidation('validate');
-            var formValidation = $('#dobForm').data('formValidation');
-            var valid = formValidation.isValid();
-            if (valid) {
+        $(document).ready(function () {
+            populateHistory();
+            $("#calculate").click(function () {
+                //$('#dobForm').formValidation('validate');
+                //var formValidation = $('#dobForm').data('formValidation');
+                //var valid = formValidation.isValid();
+                //if (valid) {
                 var result = generateDays($('#dob').val())
                 $('#dayslived').html(result);
                 //saving the entry
@@ -91,13 +93,13 @@ html( lang="en" )
                         formValidation.resetField('date_of_birth', true);
                     }
                 });
-
                 populateHistory();
-            }
+                //}
+            });
         });
 
         function populateHistory() {
-            $.get("/api/bears", function (data, status) {
+            $.get("/api/entry", function (data, status) {
                 $('#history').find('tbody tr.entries').remove();
                 $(data).each(function (index, element) {
                     var entry = $('#rows .prototype').clone().attr("class", "entries");
@@ -116,7 +118,7 @@ html( lang="en" )
             entry.find('button').on('click', function () {
                 var id = entry.find('p.id').html();
                 $.ajax({
-                    url: '/api/bears/' + id,
+                    url: '/api/entry/' + id,
                     type: 'DELETE',
                     success: function (result) {
                         populateHistory();
@@ -135,47 +137,46 @@ html( lang="en" )
             return output;
         }
 
-        $(document).ready(function () {
-            populateHistory();
-//            $('#datepicker')
-//                    .datepicker({
-//                        format: 'mm/dd/yyyy',
-//                        weekStart: 1
-//                    })
-//                    .on('changeDate', function (e) {
-//                        // Revalidate the date field
-//                        $('#dobForm').formValidation('revalidateField', 'date_of_birth');
-//                    });
-//            $('#dobForm').formValidation({
-//                framework: 'bootstrap',
-//                button: {
-//                    selector: '#calculate',
-//                    disabled: 'disabled'
-//                },
-//                icon: {
-//                    valid: 'glyphicon glyphicon-ok',
-//                    invalid: 'glyphicon glyphicon-remove',
-//                    validating: 'glyphicon glyphicon-refresh'
-//                },
-//                fields: {
-//                    name: {
-//                        validators: {
-//                            notEmpty: {
-//                                message: 'The name is required'
-//                            }
+
+
+//        $('#datepicker')
+//                .datepicker({
+//                    format: 'mm/dd/yyyy',
+//                    weekStart: 1
+//                })
+//                .on('changeDate', function (e) {
+//                    // Revalidate the date field
+//                    $('#dobForm').formValidation('revalidateField', 'date_of_birth');
+//                });
+//        $('#dobForm').formValidation({
+//            framework: 'bootstrap',
+//            button: {
+//                selector: '#calculate',
+//                disabled: 'disabled'
+//            },
+//            icon: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+//            },
+//            fields: {
+//                name: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: 'The name is required'
 //                        }
-//                    },
-//                    date_of_birth: {
-//                        validators: {
-//                            notEmpty: {
-//                                message: 'The date is required'
-//                            },
-//                            date_of_birth: {
-//                                format: 'MM/DD/YYYY',
-//                                message: 'The date is not a valid'
-//                            }
+//                    }
+//                },
+//                date_of_birth: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: 'The date is required'
+//                        },
+//                        date_of_birth: {
+//                            format: 'MM/DD/YYYY',
+//                            message: 'The date is not a valid'
 //                        }
 //                    }
 //                }
-//            });
-        });
+//            }
+//        });
