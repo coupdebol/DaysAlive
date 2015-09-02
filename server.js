@@ -1,6 +1,10 @@
 // server.js
 console.log("Starting server");
 console.log("DB URL:" + process.env.DATABASE_URL);
+if(process.env.DATABASE_URL === undefined)
+{
+    process.exit();
+}
 
 // BASE SETUP
 // =============================================================================
