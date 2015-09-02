@@ -15,13 +15,13 @@ html( lang="en" )
         link(rel="stylesheet", href='/bootstrap/dist/css/bootstrap.css')
         link(rel="stylesheet", href='/bootstrap/dist/css/bootstrap-theme.css')
 
-        link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker.css")
-        link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css")
-        script(src="/bootstrap-datepicker/dist/js/bootstrap-datepicker.js")
-
-        link(rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css")
-        script(src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js")
-        script(src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js")
+        //link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker.css")
+        //link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css")
+        //script(src="/bootstrap-datepicker/dist/js/bootstrap-datepicker.js")
+        //
+        //link(rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css")
+        //script(src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js")
+        //script(src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js")
         style(type='text/css').
             #dobForm .form-control-feedback {
                 top: 0;
@@ -137,45 +137,45 @@ html( lang="en" )
 
         $(document).ready(function () {
             populateHistory();
-            $('.datepicker')
-                    .datepicker({
-                        format: 'mm/dd/yyyy',
-                        weekStart: 1
-                    })
-                    .on('changeDate', function (e) {
-                        // Revalidate the date field
-                        $('#dobForm').formValidation('revalidateField', 'date_of_birth');
-                    });
-            $('#dobForm').formValidation({
-                framework: 'bootstrap',
-                button: {
-                    selector: '#calculate',
-                    disabled: 'disabled'
-                },
-                icon: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    name: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The name is required'
-                            }
-                        }
-                    },
-                    date_of_birth: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The date is required'
-                            },
-                            date_of_birth: {
-                                format: 'MM/DD/YYYY',
-                                message: 'The date is not a valid'
-                            }
-                        }
-                    }
-                }
-            });
+//            $('#datepicker')
+//                    .datepicker({
+//                        format: 'mm/dd/yyyy',
+//                        weekStart: 1
+//                    })
+//                    .on('changeDate', function (e) {
+//                        // Revalidate the date field
+//                        $('#dobForm').formValidation('revalidateField', 'date_of_birth');
+//                    });
+//            $('#dobForm').formValidation({
+//                framework: 'bootstrap',
+//                button: {
+//                    selector: '#calculate',
+//                    disabled: 'disabled'
+//                },
+//                icon: {
+//                    valid: 'glyphicon glyphicon-ok',
+//                    invalid: 'glyphicon glyphicon-remove',
+//                    validating: 'glyphicon glyphicon-refresh'
+//                },
+//                fields: {
+//                    name: {
+//                        validators: {
+//                            notEmpty: {
+//                                message: 'The name is required'
+//                            }
+//                        }
+//                    },
+//                    date_of_birth: {
+//                        validators: {
+//                            notEmpty: {
+//                                message: 'The date is required'
+//                            },
+//                            date_of_birth: {
+//                                format: 'MM/DD/YYYY',
+//                                message: 'The date is not a valid'
+//                            }
+//                        }
+//                    }
+//                }
+//            });
         });
