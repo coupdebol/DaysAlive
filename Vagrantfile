@@ -64,8 +64,22 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   sudo apt-get update
-  #   sudo apt-get install -y apache2
-  # SHELL
+   config.vm.provision "shell", inline: <<-SHELL
+   
+	 echo "--- Installing node.js ---"
+	 sudo apt-get install --yes curl
+	 curl --silent --location https://deb.nodesource.com/setup | sudo bash -
+	 sudo apt-get install --yes nodejs npm
+	 #Expect > 0.10.40 of node | 1.4 of npm	 
+
+	 echo "--- Installing Heroku ---"
+	 sudo wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+	 
+	 cd DaysAlive
+	 npm install --no-bin-links
+   SHELL
+  
+#  config.vm.provision "ansible" do |ansible|
+#        ansible.playbook = "playbook.yml"
+#	end
 end
