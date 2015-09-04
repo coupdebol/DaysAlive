@@ -80,21 +80,13 @@ html( lang="en" )
         $(document).ready(function () {
             populateHistory();
             $("#calculate").click(function () {
-                //$('#dobForm').formValidation('validate');
-                //var formValidation = $('#dobForm').data('formValidation');
-                //var valid = formValidation.isValid();
-                //if (valid) {
+
                 var result = generateDays($('#dob').val())
                 $('#dayslived').html(result);
                 //saving the entry
-                $.post("/api/bears", $("#dobForm").serialize(), function (data, status) {
-                    if (status == "success") {
-                        formValidation.resetField('name', true);
-                        formValidation.resetField('date_of_birth', true);
-                    }
-                });
+                $.post("/api/entry", $("#dobForm").serialize(), function (data, status) { });
                 populateHistory();
-                //}
+
             });
         });
 
@@ -106,7 +98,8 @@ html( lang="en" )
                     entry.removeAttr("style");
                     entry.find('p.id').html(element._id);
                     entry.find('td').eq(1).html(element.name);
-                    entry.find('td').eq(2).html(element.date_of_birth);
+
+                    entry.find('td').eq(2).html(new Date(element.date_of_birth).toLocaleDateString());
                     entry.find('td').eq(3).html(generateDays(element.date_of_birth));
                     initRemoveBtn(entry);
                     $('#history').find('tbody#rows').append(entry);
