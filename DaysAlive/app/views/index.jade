@@ -14,6 +14,9 @@ html( lang="en" )
         script( src='/bootstrap/dist/js/bootstrap.js' )
         link(rel="stylesheet", href='/bootstrap/dist/css/bootstrap.css')
         link(rel="stylesheet", href='/bootstrap/dist/css/bootstrap-theme.css')
+        link(rel="stylesheet", href="/jquery-ui/themes/base/jquery-ui.css")
+        script(src="//code.jquery.com/ui/1.11.4/jquery-ui.js")
+        //script(src="/jquery-ui/jquery-ui.js")
 
         //link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker.css")
         //link(rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css")
@@ -30,7 +33,7 @@ html( lang="en" )
 
         .row
             .col-md-12.col-sm-12.col-xs-12
-                h3 Enter your date of birth
+                h3 How Many days v1
             .col-md-6.col-sm-6.col-xs-12
                 form#dobForm.form-horizontal(action='api/bears' method='POST')
                     .form-group
@@ -41,7 +44,7 @@ html( lang="en" )
                         label.col-sm-4.control-label(for='dob') Date of Birth:
                         .col-sm-8
                             #datePicker.input-group.input-append.date
-                                input#dob.form-control( type="text",name='date_of_birth' )
+                                input#dob.form-control( type="text",name='date_of_birth' readonly)
                                 span.input-group-addon.add-on
                                     span.glyphicon.glyphicon-calendar
                     .form-group
@@ -78,17 +81,41 @@ html( lang="en" )
 
     script.
         $(document).ready(function () {
+            //at load button is disabled
+            $('#calculate').attr('disabled','disabled');
+
             populateHistory();
+
+            //validates form whenever the field receive input
+            $("#name").on("input",function(){
+                validateEnableForm();
+            });
+            $("#dob").on("input", function () {
+                validateEnableForm();
+            });
+
+
+            //when the calculte button is pressed, a POST request is sent to the server
             $("#calculate").click(function () {
 
                 var result = generateDays($('#dob').val())
                 $('#dayslived').html(result);
                 //saving the entry
-                $.post("/api/entry", $("#dobForm").serialize(), function (data, status) { });
-                populateHistory();
+                $.post("/api/entry", $("#dobForm").serialize(), function (data, status) {
+                    populateHistory();
+                });
+
 
             });
         });
+
+        function validateEnableForm(){
+            if ($('#name').val() != "" && $('#dob').val() != "") {
+                $('#calculate').removeAttr('disabled');
+            } else {
+                $('#calculate').attr('disabled', 'disabled');
+            }
+        }
 
         function populateHistory() {
             $.get("/api/entry", function (data, status) {
@@ -132,11 +159,16 @@ html( lang="en" )
 
 
 
-//        $('#datepicker')
-//                .datepicker({
-//                    format: 'mm/dd/yyyy',
-//                    weekStart: 1
-//                })
+        var today = new Date();
+        $('#dob').datepicker({
+            dateFormat: 'd MM, yy',
+            weekStart: 1,
+            changeMonth: true,
+            changeYear: true,
+            maxDate: today,
+            showAnim: "fold"
+
+        });
 //                .on('changeDate', function (e) {
 //                    // Revalidate the date field
 //                    $('#dobForm').formValidation('revalidateField', 'date_of_birth');
