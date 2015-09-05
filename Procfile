@@ -1,2 +1,2 @@
-web: cd daysalive && npm start
+web: cd application && npm start
 
