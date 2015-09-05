@@ -7,7 +7,7 @@
     "url": ""
   },
   "scripts": {
-    "start": "node DaysAlive/server.js"
+    "start": "node daysalive/server.js"
   },
   "engines": {
     "node": "*"
