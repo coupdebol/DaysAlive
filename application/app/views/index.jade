@@ -24,9 +24,13 @@ html( lang="en" )
             .col-md-6.col-sm-6.col-xs-12
                 form#dobForm.form-horizontal(action='api/bears' method='POST')
                     .form-group
-                        label.col-sm-4.control-label(for='name') Name:
+                        label.col-sm-4.control-label(for='name') Given Name:
                         .col-sm-8
-                            input#name.form-control( type="text",name='name' )
+                            input#given_name.form-control( type="text",name='given_name' )
+                    .form-group
+                        label.col-sm-4.control-label(for='name') Family Name:
+                        .col-sm-8
+                            input#family_name.form-control( type="text",name='family_name' )
                     .form-group
                         label.col-sm-4.control-label(for='dob') Date of Birth:
                         .col-sm-8
@@ -51,7 +55,8 @@ html( lang="en" )
                             thead
                                 tr
                                     th(style='width:4em;')
-                                    th Name
+                                    th Given Name
+                                    th Family Name
                                     th Date of birth
                                     th Days lived
                             tbody#rows
@@ -59,9 +64,10 @@ html( lang="en" )
                                     td
                                         button#calculate.btn.btn-xs.btn-danger(type="button") Remove
                                         p.id(style="display:none")
-                                    td asdf
-                                    td asfASDFG
-                                    td dsf
+                                    td
+                                    td
+                                    td
+                                    td
 
 
 
@@ -75,7 +81,10 @@ html( lang="en" )
             populateHistory();
 
             //validates form whenever the field receive input
-            $("#name").on("input",function(){
+            $("#given_name").on("input",function(){
+                validateEnableForm();
+            });
+            $("#family_name").on("input", function () {
                 validateEnableForm();
             });
             $("#dob").on("change", function () {
@@ -95,7 +104,8 @@ html( lang="en" )
                     populateHistory();
                     //clear the form
                     $("#dob").val("");
-                    $("#name").val("");
+                    $("#given_name").val("");
+                    $("#family_name").val("");
                     $('#calculate').attr("disabled","disabled");
 
                 });
@@ -105,9 +115,13 @@ html( lang="en" )
         });
 
         function validateEnableForm(){
-            if ($('#name').val() != "" && $('#dob').val() != "") {
+            if ($('#given_name').val() != ""
+                    && $('#dob').val() != ""
+                    && $('#family_name').val() != ""){
                 $('#calculate').removeAttr('disabled');
-            } else {
+            }
+            else
+            {
                 $('#calculate').attr('disabled', 'disabled');
             }
         }
@@ -121,10 +135,11 @@ html( lang="en" )
                     var entry = $('#rows .prototype').clone().attr("class", "entries");
                     entry.removeAttr("style");
                     entry.find('p.id').html(element._id);
-                    entry.find('td').eq(1).html(element.name);
+                    entry.find('td').eq(1).html(element.given_name);
+                    entry.find('td').eq(2).html(element.family_name);
 
-                    entry.find('td').eq(2).html(new Date(element.date_of_birth).toLocaleDateString());
-                    entry.find('td').eq(3).html(generateDays(element.date_of_birth));
+                    entry.find('td').eq(3).html(new Date(element.date_of_birth).toLocaleDateString());
+                    entry.find('td').eq(4).html(generateDays(element.date_of_birth));
                     initRemoveBtn(entry);
                     $('#history').find('tbody#rows').append(entry);
                 });
