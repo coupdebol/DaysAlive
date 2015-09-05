@@ -35,7 +35,7 @@ var router = express.Router();              // get an instance of the express Ro
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/', router);
-app.use(express.static('web-libraries'));
+app.use(express.static('./application/web-libraries'));
 
 
 router.get('/', function(req, res) {
