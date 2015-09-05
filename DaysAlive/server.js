@@ -49,7 +49,6 @@ router.get('/', function(req, res) {
 router.route('/api/entry')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
-        console.log("insert an entry into DB");
         var entry = new Entry();      // create a new instance of the model
         entry.name = req.body.name;
         entry.date_of_birth = new Date(req.body.date_of_birth);
@@ -59,7 +58,7 @@ router.route('/api/entry')
         entry.save(function(err) {
             if (err)
                 res.send(err);
-
+            console.log("entry created ("+req.body.name+","+req.body.date_of_birth+")");
             res.json({ message: 'entry created!' });
         });
 
@@ -69,9 +68,9 @@ router.route('/api/entry')
         Entry.find(function(err, entries) {
             if (err)
                 res.send(err);
-
+            console.log("sending all entries to client!");
             res.json(entries);
-        });
+        }).sort('-timestamp');
     });
 
 // on routes that end in /bears/:bear_id
@@ -85,7 +84,7 @@ router.route('/api/entry/:entry_id')
         }, function(err, entry) {
             if (err)
                 res.send(err);
-
+            console.log("removed entry: "+req.params.entry_id);
             res.json({ message: 'Successfully deleted' });
         });
     });
