@@ -36,13 +36,13 @@ html( lang="en" )
                                     span.glyphicon.glyphicon-calendar
                     .form-group
                         .col-sm-offset-4.col-sm-8
-                            button#calculate.btn.btn-default(type="button") Calculate
+                            button#calculate.btn.btn-default(type="button") Save
             .col-md-6.col-sm-6.col-xs-12
                 .panel.panel-default
                     .panel-heading Days lived
                     .panel-body
                         h3
-                            span#dayslived Ah! Nothing should be here!!
+                            span#dayslived
             .col-md-12.col-sm-12.col-xs-12
                 .panel.panel-default
                     .panel-heading History
@@ -79,7 +79,9 @@ html( lang="en" )
                 validateEnableForm();
             });
             $("#dob").on("change", function () {
+                console.log($('#dob').val());
                 validateEnableForm();
+                $('#dayslived').html(generateDays($('#dob').val()));
             });
 
 
@@ -91,6 +93,11 @@ html( lang="en" )
                 //saving the entry
                 $.post("/api/entry", $("#dobForm").serialize(), function (data, status) {
                     populateHistory();
+                    //clear the form
+                    $("#dob").val("");
+                    $("#name").val("");
+                    $('#calculate').attr("disabled","disabled");
+
                 });
 
 
@@ -142,7 +149,9 @@ html( lang="en" )
         function generateDays(dateString) {
             var now = new Date();
             var todayAtMidn = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            console.log(dateString);
             var dt = new Date(dateString);
+            console.log(dt);
             var result = todayAtMidn.getTime() - dt.getTime();
             var output = (((result / 1000 ) / 60) / 60) / 24;
             output = Math.round(output);
