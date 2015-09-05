@@ -18,7 +18,7 @@ var mongoose     = require('mongoose');
 
 var connectionString = process.env.MONGOLAB_URI;
 mongoose.connect(connectionString);
-var Entry     = require('application/app/models/entry.js');
+var Entry     = require('./app/models/entry.js');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -39,7 +39,7 @@ app.use(express.static('web-libraries'));
 
 
 router.get('/', function(req, res) {
-    res.send(jade.renderFile('application/app/views/index.jade', {pretty:true}));
+    res.send(jade.renderFile('./app/views/index.jade', {pretty:true}));
 });
 
 
