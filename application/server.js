@@ -39,7 +39,7 @@ app.use(express.static('web-libraries'));
 
 
 router.get('/', function(req, res) {
-    res.send(jade.renderFile('./app/views/index.jade', {pretty:true}));
+    res.send(jade.renderFile('./application/app/views/index.jade', {pretty:true}));
 });
 
 
