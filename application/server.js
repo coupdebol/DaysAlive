@@ -18,7 +18,7 @@ var mongoose     = require('mongoose');
 
 var connectionString = process.env.MONGOLAB_URI;
 mongoose.connect(connectionString);
-var Entry     = require('application/app/models/entry');
+var Entry     = require('application/app/models/entry.js');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
