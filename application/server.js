@@ -54,6 +54,7 @@ router.route('/api/entry')
         entry.family_name = req.body.family_name;
         entry.date_of_birth = new Date(req.body.date_of_birth);
         entry.timestamp = new Date();
+        entry.schema_version = "2.0.0";
 
 
         entry.save(function(err) {
