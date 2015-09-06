@@ -50,15 +50,17 @@ router.route('/api/entry')
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
         var entry = new Entry();      // create a new instance of the model
-        entry.name = req.body.name;
+        entry.given_name = req.body.given_name;
+        entry.family_name = req.body.family_name;
         entry.date_of_birth = new Date(req.body.date_of_birth);
         entry.timestamp = new Date();
+        entry.schema_version = "2.0.0";
 
 
         entry.save(function(err) {
             if (err)
                 res.send(err);
-            console.log("entry created ("+req.body.name+","+req.body.date_of_birth+")");
+            console.log("entry created ("+req.body.given_name+","+req.body.family_name+","+req.body.date_of_birth+")");
             res.json({ message: 'entry created!' });
         });
 
