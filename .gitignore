@@ -11,6 +11,8 @@ $RECYCLE.BIN/
 # Windows Installer files
 *.cab
 *.msi
+/migrate201-100.sh
+/migrate100-200.sh
 *.msm
 *.msp
 
