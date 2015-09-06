@@ -159,6 +159,7 @@ html( lang="en" )
                     entry.find('td').eq(5).html(generateDays(element.date_of_birth));
                     entry.find('td').eq(6).html(generateMartianDays(element.date_of_birth));
                     initRemoveBtn(entry);
+                    //only show current schema_version entries
                     $('#history').find('tbody#rows').append(entry);
                 });
             });
