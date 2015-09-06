@@ -1,6 +1,7 @@
 // server.js
 console.log("Starting server");
 console.log("DB URL:" + process.env.MONGOLAB_URI);
+console.log("SCHEMA_VERSION:" + process.env.SCHEMA_VERSION);
 if(process.env.MONGOLAB_URI === undefined)
 {
     process.exit();
@@ -17,6 +18,7 @@ var jade = require('jade');
 var mongoose     = require('mongoose');
 
 var connectionString = process.env.MONGOLAB_URI;
+var schema_version = process.env.SCHEMA_VERSION;
 mongoose.connect(connectionString);
 var Entry     = require('./app/models/entry.js');
 
@@ -47,14 +49,14 @@ router.get('/', function(req, res) {
 // on routes that end in /bears
 // ----------------------------------------------------
 router.route('/api/entry')
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
+    // create an entry (accessed at POST http://localhost:8080/api/entry)
     .post(function(req, res) {
         var entry = new Entry();      // create a new instance of the model
         entry.given_name = req.body.given_name;
         entry.family_name = req.body.family_name;
         entry.date_of_birth = new Date(req.body.date_of_birth);
         entry.timestamp = new Date();
-        entry.schema_version = "2.0.0";
+        entry.schema_version = schema_version;
 
 
         entry.save(function(err) {
@@ -67,7 +69,7 @@ router.route('/api/entry')
     })
     // get all the bears (accessed at GET http://localhost:8080/api/bears)
     .get(function(req, res) {
-        Entry.find(function(err, entries) {
+        Entry.find({schema_version:schema_version},function(err, entries) {
             if (err)
                 res.send(err);
             console.log("sending all entries to client!");
