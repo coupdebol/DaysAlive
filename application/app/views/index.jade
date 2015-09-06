@@ -20,7 +20,7 @@ html( lang="en" )
 
         .row
             .col-md-12.col-sm-12.col-xs-12
-                h3 How Many days v1
+                h3 How Many days v2
             .col-md-6.col-sm-6.col-xs-12
                 form#dobForm.form-horizontal(action='api/bears' method='POST')
                     .form-group
@@ -55,15 +55,19 @@ html( lang="en" )
                             thead
                                 tr
                                     th(style='width:4em;')
+                                    th Date of record
                                     th Given Name
                                     th Family Name
                                     th Date of birth
                                     th Days lived
+                                    th Days lived on Mars
                             tbody#rows
                                 tr.prototype( style="display:none;")
                                     td
                                         button#calculate.btn.btn-xs.btn-danger(type="button") Remove
                                         p.id(style="display:none")
+                                    td
+                                    td
                                     td
                                     td
                                     td
@@ -135,11 +139,13 @@ html( lang="en" )
                     var entry = $('#rows .prototype').clone().attr("class", "entries");
                     entry.removeAttr("style");
                     entry.find('p.id').html(element._id);
-                    entry.find('td').eq(1).html(element.given_name);
-                    entry.find('td').eq(2).html(element.family_name);
+                    entry.find('td').eq(1).html(new Date(element.timestamp).toLocaleDateString());
+                    entry.find('td').eq(2).html(element.given_name);
+                    entry.find('td').eq(3).html(element.family_name);
 
-                    entry.find('td').eq(3).html(new Date(element.date_of_birth).toLocaleDateString());
-                    entry.find('td').eq(4).html(generateDays(element.date_of_birth));
+                    entry.find('td').eq(4).html(new Date(element.date_of_birth).toLocaleDateString());
+                    entry.find('td').eq(5).html(generateDays(element.date_of_birth));
+                    entry.find('td').eq(6).html(generateMartianDays(element.date_of_birth));
                     initRemoveBtn(entry);
                     $('#history').find('tbody#rows').append(entry);
                 });
@@ -164,11 +170,21 @@ html( lang="en" )
         function generateDays(dateString) {
             var now = new Date();
             var todayAtMidn = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            console.log(dateString);
             var dt = new Date(dateString);
-            console.log(dt);
             var result = todayAtMidn.getTime() - dt.getTime();
             var output = (((result / 1000 ) / 60) / 60) / 24;
+            output = Math.round(output);
+            return output;
+        }
+
+        function generateMartianDays(dateString) {
+            var now = new Date();
+            var todayAtMidn = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            var dt = new Date(dateString);
+            var result = todayAtMidn.getTime() - dt.getTime();
+            //one martian day lasts for 1 days and 40 minutes
+            //so one day is made of 24 hours + 40 minutes = 24 + 2/3
+            var output = (((result / 1000 ) / 60) / 60) / (24 + 2/3);
             output = Math.round(output);
             return output;
         }
