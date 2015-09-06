@@ -8,9 +8,12 @@ echo "--Installing Heroku toolbelt--"
 echo "-----------------------"
 wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
-
-echo "--- PREPARING DEPENDENCIES FOR DAYSALIVE ---"
-
+echo "-----------------------"
+echo "--- Installing Ansible ---"
+echo "-----------------------"
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible --yes
 
 cd DaysAlive
 
