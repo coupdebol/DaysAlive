@@ -17,8 +17,8 @@ var jade = require('jade');
 var mongoose     = require('mongoose');
 
 var connectionString = process.env.MONGOLAB_URI;
-mongoose.connect(connectionString);
-var Entry     = require('./app/models/entry.js');
+mongoose.connect(connectionString);         //connect to the database
+var Entry     = require('./app/models/entry.js'); //create the database object to query the collection
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
