@@ -2,7 +2,7 @@
   "author": "Julien Antony <coupdebol@gmail.com>",
   "name": "DaysAlive",
   "description": "Give your date of birth and know how many days you have been alive.",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "repository": {
     "url": ""
   },
