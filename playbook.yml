@@ -10,4 +10,8 @@
       apt: name='nodejs' state='present'
     - name: Cloning repository from github
       git: repo=https://github.com/coupdebol/DaysAlive.git dest=~/DaysAlive accept_hostkey=true
-
+    - name: install mongodb
+      action: apt update_cache=yes pkg={{item}} state=installed
+      with_items:
+        - mongodb
+    - service: name=mongodb state=started
