@@ -1,0 +1,13 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+    - name: install curl
+      apt: name='curl' state='present'
+    - name: install set up repository for NodeJS and Npm
+      shell: "curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -"
+    - name: install NodeJs and Npm
+      apt: name='nodejs' state='present'
+    - name: Cloning repository from github
+      git: repo=https://github.com/coupdebol/DaysAlive.git dest=~/DaysAlive accept_hostkey=true
+

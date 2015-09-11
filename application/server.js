@@ -1,4 +1,7 @@
 // server.js
+//the code below is an adaptation of the tutorial that can be found at
+// https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4
+//
 console.log("Starting server");
 console.log("DB URL:" + process.env.MONGOLAB_URI);
 console.log("SCHEMA_VERSION:" + process.env.SCHEMA_VERSION);
