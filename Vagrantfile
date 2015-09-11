@@ -15,4 +15,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder "../DaysAlive", "/home/vagrant/DaysAlive"
 
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
 end
